@@ -37,8 +37,6 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 //           AAAAAAADDED  by richaard
 
 
-
-
 treeJSON = d3.json("flare.json", function(error, treeData) {
 //});
     //treeCSV = d3.csv("flare.csv", function(error, treeData) {
@@ -56,17 +54,8 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
     var duration = 750;
     var root;
     // size of the diagram
-    var viewerWidth = $(document).width()-100;
+    var viewerWidth = $(document).width();
     var viewerHeight = $(document).height()-200;// +10
-
-    var currNode = treeData;
-
-    //var viewerWidth  = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    //var viewerHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    //var currNode = root;
-    //var stratify = d3.stratify()
-    //.parentId(function(d){return d.id.substring(0,d.id.lastIndexOf("."));});
-    //root = stratify(treeData);
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
     // define a d3 diagonal projection for use by the node paths later on.
@@ -397,6 +386,8 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
                 return d.id || (d.id = ++i);
             });
 
+        //var nodeAux = node.enter
+
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("g")
             .call(dragListener)
@@ -554,32 +545,63 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
     {
         if(name == "..")
         {
-            return {"node":currentNode.parent, "msg":currentNode.parent.name};
+            return currentNode.parent;
         }
         for(var i=0;i<currentNode.children.length; i++)
         {
             if( currentNode.children[i].name == name ) 
             {
-                return {"node": currentNode.children[i], "msg": currentNode.children[i].name};
+                return currentNode.children[i];
             }
         }
-        return {"node": currentNode.children[i], "msg":"unknow" };
+        return currentNode;
     }
+
+    var currCommandNode = root;
 
     function consoleEnterPath(arrayPath)
     {    
-        var nextStatus;        
-        for(var i=0;i< arrayPath.length;i++)
+        if(arrayPath.length>0)
         {
-            nextStatus = lookAtChild(currNode, arrayPath[i]); // cd ./fare/
-        }   
-        //currNode = nextStatus["node"];
-        console.log("currNode: ", currNode)
-        centerNode(currNode);
-        //return nextStatus["msg"];
-        return nextStatus;
+            for(var i=0;i< arrayPath.length;i++)
+            {
+                currCommandNode = lookAtChild(currCommandNode, arrayPath[i]); // cd ./fare/
+            }
+        }
+        var options = [];
+        for(var i=0;i<currCommandNode.children.length;i++){
+            if(currCommandNode.children[i].children!=null)
+            {
+                options.push(currCommandNode.children[i].name+"/");    
+            }
+            else
+                options.push(currCommandNode.children[i].name);
+        }
+        //currCommandNode = root;
+        return options;
     }
 
+    var status = root;  // flare
+
+    function updateViewTree(pathArray)
+    {
+
+        var l = pathArray.length;
+        // center(pathArray[l-1]);
+        for(var i=0; i<status.children.length;i++)
+        {
+            for(var j=0;j<pathArray.length;j++)
+            {
+                if(status.children[i].name == pathArray[j])
+                {
+                    status=status.children[i];
+                }
+            }
+        }
+        currNode = status;
+        currCommandNode = status;
+        centerNode(status);
+    }
 
   /* First console */
   $(document).ready(function(){
@@ -609,14 +631,18 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
         
         return path;
     }
-    
     var controller1 = console1.console({
-      promptLabel: 'root> ',
+      promptLabel: 'root-flare> ',
       commandValidate:function(line){
         if (line == "") return false;
         else return true;
       },
       commandHandle:function(line){
+          var cmd=line.split(/\s+/);
+          var path = cmd[1];
+          // Here is a problem -> cd .. , when we Stay at document(not folder)
+          controller1.promptLabel = 'root-flare/' + path + "> "
+          updateViewTree(path.split("/"));  
           //return [{msg:"=> "+consoleEnterPath( option(line) ),
           return [{msg:"=> "+line,
           className:"jquery-console-message-value"},
@@ -624,23 +650,12 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
                   className:"jquery-console-message-type"}]
       },
       colors: ["red","relojeando","relajeando3","blue","green","black","yellow","white","grey"],
-      cols: 40,
-      
+      cols: 40,      
       completeHandle:function(input){
         var arrayPath = stringPathToArrayPath(input);
-        var prefix    = path.pop();
-        
-        var postObj   = consoleEnterPath( arrayPath );
-        var postNode  = postObj["node"]
-        var postMsg   = postObj["msg"]
-        //console.log()
-        console.log("PostMsg: ",postMsg)
-        var options = [];
-        //console.log("postNode: ", postNode);
-        for(var i=0;i<postNode.children.length;i++){
-          options.push(postNode.children[i].name);
-        }
-        
+        var prefix    = arrayPath.pop();
+        console.log("arrayPath: ",arrayPath);
+        var options = consoleEnterPath(arrayPath);
         var ret = [];
         for (var i=0;i<options.length;i++) {
           var color=options[i];
@@ -648,27 +663,9 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
             ret.push(color.substring(prefix.length));
           }
         }
+        //ret.push("/")
         return ret;
       },
-      /*
-      completeHandle:function(prefix){
-        //var colors = this.colors;
-        var paths = option(prefix);
-        var ans = consoleEnterPath( paths )["node"];
-        var colors = [];
-        for(var i=0;i<ans.length;i++)
-        {
-           colors.push(ans.children[i].name);
-        }
-        var ret = [];
-        for (var i=0;i<colors.length;i++) {
-          var color=colors[i];
-          if (color.lastIndexOf(prefix,0) === 0) {
-            ret.push(color.substring(prefix.length));
-          }
-        }
-        return ret;
-      },*/
       /*
       commandHandle:function(line){
         try { var ret = eval(line);
