@@ -1,0 +1,9 @@
+name: interactive-tidy-tree
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - pip
+  - pip:
+    - pip-tools
+    - -r file:requirements.txt

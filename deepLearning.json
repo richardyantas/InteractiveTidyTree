@@ -1,0 +1,42 @@
+{
+    "name": "DeepLearning",
+    "children":
+    [
+        {
+            "name":"LinearAlgebra",
+            "children":
+            [
+                {
+                    "name": "EigenDecomposition",
+                    "size": 39
+                },
+                {
+                    "name": "SingularValueDecomposition",
+                    "size": 12
+                }
+            ]
+        },
+        {
+            "name":"ProbabilityAndInformationTheory",
+            "children":
+            [
+                {
+                    "name": "RandomVariables",
+                    "size": 34
+                },
+                {
+                    "name": "ProbabilityDistribution",
+                    "size": 5
+                },
+                {
+                    "name": "MarginalProbability",
+                    "size": 0
+                },
+                {
+                    "name": "ConditionalProbability",
+                    "size": 1
+                }
+            ]
+        }
+    ]
+}

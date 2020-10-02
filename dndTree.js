@@ -37,7 +37,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 //           AAAAAAADDED  by richaard
 
 
-treeJSON = d3.json("flare.json", function(error, treeData) {
+treeJSON = d3.json("deepLearning.json", function(error, treeData) {
 //});
     //treeCSV = d3.csv("flare.csv", function(error, treeData) {
     // Calculate total nodes, max label length
@@ -314,7 +314,7 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
         scale = zoomListener.scale();
         x = -source.y0;
         y = -source.x0;
-        x = x * scale + viewerWidth / 2;
+        x = x * scale + viewerWidth / 3;
         y = y * scale + viewerHeight / 2;
         d3.select('g').transition()
             .duration(duration)
@@ -543,10 +543,6 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
 
     function lookAtChild(currentNode,name)
     {
-        if(name == "..")
-        {
-            return currentNode.parent;
-        }
         for(var i=0;i<currentNode.children.length; i++)
         {
             if( currentNode.children[i].name == name ) 
@@ -556,18 +552,29 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
         }
         return currentNode;
     }
-
     var currCommandNode = root;
-
     function consoleEnterPath(arrayPath)
-    {    
-        if(arrayPath.length>0)
-        {
-            for(var i=0;i< arrayPath.length;i++)
+    {   
+        currCommandNode = status;
+        var l = arrayPath.length;
+        var n = currCommandNode.children.length;
+        for(var i=0,j=0; i<n && j<arrayPath.length;i++)
+        {   
+            if(arrayPath[j]=="..") // Add the case when cd .. in root
             {
-                currCommandNode = lookAtChild(currCommandNode, arrayPath[i]); // cd ./fare/
+                currCommandNode=currCommandNode.parent;
+                j++;                    
+                n = currCommandNode.children.length;
+                i = 0;
             }
-        }
+            else if(currCommandNode.children[i].name == arrayPath[j])
+            {
+                currCommandNode = currCommandNode.children[i];
+                j++;                    
+                n = currCommandNode.children.length;
+                i = 0;
+            }                
+        }  
         var options = [];
         for(var i=0;i<currCommandNode.children.length;i++){
             if(currCommandNode.children[i].children!=null)
@@ -577,30 +584,56 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
             else
                 options.push(currCommandNode.children[i].name);
         }
-        //currCommandNode = root;
+        //currCommandNode = root; // ?? just tab
         return options;
     }
 
     var status = root;  // flare
 
+    function findPath(s)
+    {
+        //var s = y
+        var path = []         
+        while(s.name != root.name)
+        {
+            path.push(s.name);
+            s=s.parent;
+        }
+        //path.push(s.name);
+        path.reverse()
+        return path;
+    }
     function updateViewTree(pathArray)
     {
-
+        //var path = [];
         var l = pathArray.length;
-        // center(pathArray[l-1]);
-        for(var i=0; i<status.children.length;i++)
-        {
-            for(var j=0;j<pathArray.length;j++)
+        var n = status.children.length;
+        for(var i=0,j=0; i<n && j<pathArray.length;i++)
+        {   
+            if(pathArray[j]=="..")
             {
-                if(status.children[i].name == pathArray[j])
-                {
-                    status=status.children[i];
-                }
+                status=status.parent;
+                j++;                    
+                n = status.children.length;
+                i = 0;
+                continue;
             }
-        }
+            if(status.children[i].name == pathArray[j])
+            {
+                status = status.children[i];
+                j++;                    
+                n = status.children.length;
+                i = 0;
+                continue;
+            }                
+        }            
         currNode = status;
         currCommandNode = status;
-        centerNode(status);
+        centerNode(status);   
+        var p = findPath(status) 
+        console.log(p)
+        //return p=["sd","cam","sod"];
+        return p;
     }
 
   /* First console */
@@ -612,23 +645,19 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
     function stringPathToArrayPath(line)
     {
         var cmd=line.split(/\s+/);
-        if(cmd.length==2)
+        if(cmd[0]=="cd")
         {
-          if(cmd[0]=="cd")
-          {
-              path=cmd[1].split("/")              
-              console.log(path)
-              if(path[path.length-1]=="")
-              { 
+            path=cmd[1].split("/")              
+            console.log(path)
+            if(path[path.length-1]=="")
+            { 
                 path.pop();                
-              }
-              else if(path[0]=="") 
-              {
+            }
+            else if(path[0]=="") 
+            {
                 path.shift();
-              }
-          }
+            }
         }
-        
         return path;
     }
     var controller1 = console1.console({
@@ -638,16 +667,28 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
         else return true;
       },
       commandHandle:function(line){
-          var cmd=line.split(/\s+/);
-          var path = cmd[1];
-          // Here is a problem -> cd .. , when we Stay at document(not folder)
-          controller1.promptLabel = 'root-flare/' + path + "> "
-          updateViewTree(path.split("/"));  
-          //return [{msg:"=> "+consoleEnterPath( option(line) ),
-          return [{msg:"=> "+line,
-          className:"jquery-console-message-value"},
-                  {msg:":: [a]",
-                  className:"jquery-console-message-type"}]
+        var cmd=line.split(/\s+/);
+        var pathEntered = cmd[1];
+        // Here is a problem -> cd .. , when we Stay at document(not folder)
+        var realPath = updateViewTree(pathEntered.split("/"))
+        controller1.promptLabel = "root-flare/" + realPath.join("/") + "> "
+        return [{msg:"=> "+line,
+        className:"jquery-console-message-value"}]
+        /*
+        if (cmd[0]=="cd")
+        {
+            var pathEntered = cmd[1];
+            // Here is a problem -> cd .. , when we Stay at document(not folder)
+            var realPath = updateViewTree(pathEntered.split("/"));  
+            controller1.promptLabel = 'root-flare/' + realPath + "> ";
+            return [{msg:"=> "+line,
+            className:"jquery-console-message-value"}]
+        }
+        else
+        {
+            return [{msg:"=> "+"Command Not Found",
+            className:"jquery-console-message-value"}]
+        }*/
       },
       colors: ["red","relojeando","relajeando3","blue","green","black","yellow","white","grey"],
       cols: 40,      
