@@ -1,4 +1,0 @@
-API  - UI
-
-is used as a data structure to pass information between the UI and the API
-For the rest of this chapter.
