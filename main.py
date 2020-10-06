@@ -9,6 +9,15 @@ import pytest
 # https://stackoverflow.com/questions/42352841/how-to-update-an-existing-conda-environment-with-a-yml-file
 # pytest main.py
 
+class TestClass:
+    def test_one(self):
+        x = "this"
+        assert "h" in x
+    def test_two(self):
+        x = "hello"
+        assert hasattr(x,"check")
+
+
 def func(x):
     return x+1
 
