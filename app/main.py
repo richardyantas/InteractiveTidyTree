@@ -24,19 +24,6 @@ def func(x):
 def test_answer():
     assert func(3) == 5
 
-'''
-# private, public, inheritance ? 
-class node:
-    def __init__(name, parent):
-        self.name = name
-        self.parente = parent
-        self.children = []
-    def addChild():
-        
-    def modifyParent():
-'''
-
-
 #tree = {}
 #tree["flare"] = node("flare",null)
 # tree[ data_csv[i].name ] = node(data_csv[i].name, null)
@@ -162,12 +149,6 @@ data['children'][0]['children'].append(
 
 '''
 
-# Enseniar 
-# Asesorar . 
-# freelance
-# tiktok adalid
-# publicitario & marketing & marketing & disenio grafico.
-# Duda, Insegurar en la comprar online.
 
 
 # data['deepLearning']['LinearAlgebra']
@@ -187,37 +168,3 @@ with open('data.json', 'w') as outfile:
 
 
 
-
-# Wisdom of life, love, patient, dont takt life too seriusly
-
-# The life of inner peace, being harmonius and without stress, is the
-# easist type of existence.
-# The chief struggle then in gaining mental peace is the effort of revamping 
-# your thinking to the relaxed attitude of acceptance of God's gift of peace.
-
-
-# Enjoy wathever you learn, be courius just learn the moment, and read more in your free time
-# don't see other people, just focus on your research, in your passions and enjoy, because
-# because life is unique
-
-# people want power to damage others
-
-# decide betterm decide less
-# why you are a slave to your emotions
-# Hard work pays off in the future. Laziness pays off now. 
-#  I used to have an open mind but my brains kept falling out
-# save the wisdom you find on internet, it could help you the keep the right perseptive in difficult situations
-# How enjoy everything I do?
-
-# Arituclos de oficina
-
-# 
-
-# base de datos de la familia 
-# 
-
-
-
-# Marketear todos mis conocimientos 
-# Invetnar un hcer de todo 
-# matematico metido en todo, 
