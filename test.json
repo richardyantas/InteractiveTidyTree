@@ -1,0 +1,82 @@
+
+{
+  "name": "Rails",
+  "children":
+  [
+      {
+        "name":"General commands",
+        "children":
+        [
+            {
+                "name": "sudo bundle install scripts/?",
+                "size": 39
+            },
+            {
+                "name": "S",
+                "size": 12
+            },
+            {
+                "name": "SingularValueDecomposition",
+                "size": 12
+            },
+            {
+              "name": "SingularValueDecomposition",
+              "size": 12
+            },
+            {
+              "name": "SingularValueDecomposition",
+              "size": 12
+            },
+            {
+              "name": "SingularValueDecomposition",
+              "size": 12
+            }
+            ,{
+              "name": "SingularValueDecomposition",
+              "size": 12
+            }
+        ]
+      },
+      {
+          "name":"Generate a model (rails  g model Game title:string body:text)",
+          "children":
+          [
+              {
+                  "name": "EigenDecomposition",
+                  "size": 39
+              },
+              {
+                  "name": "SingularValueDecomposition",
+                  "size": 12
+              }
+          ]
+      },
+      {
+          "name":"Migration Overview rails g migration AddPartNumberToProducts",
+          "children":
+          [
+              {
+                  "name": "rails generate migration AddPartNumberToProducts part_number:string",
+                  "size": 34
+              },
+              {
+                  "name": "rails generate migration CreateProducts name:string part_number:string",
+                  "children": [
+                    {
+                      "name":"db/migrate/YYYYMMDDHHMMSS_add_details_to_products.rb",
+                      "size": 250
+                    }
+                  ]
+              },
+              {
+                  "name": "MarginalProbability",
+                  "size": 0
+              },
+              {
+                  "name": "ConditionalProbability",
+                  "size": 1
+              }
+          ]
+      }
+  ]
+}

@@ -37,7 +37,9 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 //           AAAAAAADDED  by richaard
 
 
-treeJSON = d3.json("deepLearning.json", function(error, treeData) {
+// python3 -m http.server
+
+treeJSON = d3.json("flare.json", function(error, treeData) {
 //});
     //treeCSV = d3.csv("flare.csv", function(error, treeData) {
     // Calculate total nodes, max label length
@@ -157,7 +159,6 @@ treeJSON = d3.json("deepLearning.json", function(error, treeData) {
             }
             return false;
         }).remove();
-
         dragStarted = null;
     }
 

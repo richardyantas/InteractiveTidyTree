@@ -1,0 +1,80 @@
+/*Downloaded from https://www.codeseek.co/chrislaskey/transparent-3d-world-map-in-d3js-with-svg-jqabBQ */
+/**
+ * A transparent 3d world map using the D3 library with SVG.
+ * 
+ * For a Canvas version see: https://codepen.io/chrislaskey/pen/reYxeM
+ *
+ * Combines Jason Davies SVG World Tour bl.ocks map:
+ * https://bl.ocks.org/jasondavies/4183701
+ *
+ * With the SVG Transparent World Map bl.ocks map:
+ * https://bl.ocks.org/emeeks/c88435cb568dcaf11308
+ **/
+
+ .body{
+     background-color: blue;
+ }
+
+ .world2 {
+    /* position: relative; */
+    height: 500.0px;
+    width: 500.0px;
+    border: 1px solid red;
+ }
+
+ .topic{
+    height: 500.0px;
+    width: 500.0px;
+    border: 1px solid blue;
+ }
+
+
+ .world-outline {
+    /* fill: none; */
+    fill: #0a4160;
+    /* a59a9a */
+    stroke: rgba(0, 0, 0, 0.1);
+    /* stroke: black; */
+    /* background-color: black; */
+    /* background: black; */
+    stroke-width: 1.0px;
+  }
+  
+  .back-country {
+    /* fill: #dadac4; */
+    fill: #3e3a3a;
+    /* fill: #a59a9a; */
+    stroke: #fff;
+    stroke-width: 0.0px;
+    stroke-linejoin: round;
+  }
+  
+  .back-line {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .05;
+    stroke-width: .5px;
+  }
+  
+  .country {
+    /* fill: #737368; */
+    fill:#a59a9a;
+    /* fill:green; */
+    stroke: #fff;
+    stroke-width: 0.0px;
+    stroke-linejoin: round;
+  }
+  
+  .line {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .08;
+    stroke-width: .5px;
+  }
+  
+  text {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-anchor: middle;
+  }
